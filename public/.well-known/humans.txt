@@ -1,0 +1,18 @@
+/* TEAM */
+    Developer: Tag My Trophy Team
+    Contact: hello [at] tagmytrophy.com
+    Twitter: @tagmytrophy
+    From: Colorado, USA
+
+/* THANKS */
+    All the storytellers who share their memories
+    The outdoor community for inspiration
+    Families preserving their legacies
+
+/* SITE */
+    Last update: 2024/12/09
+    Language: English
+    Doctype: HTML5
+    IDE: VS Code
+    Framework: Next.js
+    Hosting: Vercel

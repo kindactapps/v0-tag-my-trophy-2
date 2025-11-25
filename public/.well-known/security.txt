@@ -1,0 +1,6 @@
+Contact: security@tagmytrophy.com
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://tagmytrophy.com/pgp-key.txt
+Acknowledgments: https://tagmytrophy.com/security/acknowledgments
+Policy: https://tagmytrophy.com/security/policy
+Hiring: https://tagmytrophy.com/careers

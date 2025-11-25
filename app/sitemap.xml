@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ Created comprehensive sitemap for SEO optimization 
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+
+   Homepage 
+  <url>
+    <loc>https://tagmytrophy.com/</loc>
+    <lastmod>2024-12-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+   Public story pages 
+  <url>
+    <loc>https://tagmytrophy.com/story/river-adventure-x7k9</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/serene-fishing-scene-with-tackle-box-by-lake-at-su.jpg</image:loc>
+      <image:title>Perfect morning at Crystal Lake - caught my personal best bass!</image:title>
+      <image:caption>Jake's Fishing Adventures - Crystal Lake, Colorado</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/happy-multi-generational-family-outdoors-with-fish.jpg</image:loc>
+      <image:title>Teaching my grandson the art of fly fishing - passing down the tradition</image:title>
+      <image:caption>Mountain Stream, Colorado</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/story/mountain-journey-b3m5</loc>
+    <lastmod>2024-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/beautiful-mountain-landscape-scenic-destination-wi.jpg</image:loc>
+      <image:title>Summit of Mount Elbert - 14,440 feet of pure accomplishment</image:title>
+      <image:caption>Emma's Mountain Adventures - Mount Elbert, Colorado</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/story/meadow-celebration-q8w2</loc>
+    <lastmod>2024-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/multi-generational-family-gathering-celebration-wi.jpg</image:loc>
+      <image:title>Five generations together - from great-grandma to the newest baby</image:title>
+      <image:caption>The Johnson Family Reunion - Johnson Family Ranch, Colorado</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/story/tigers-soccer-2024</loc>
+    <lastmod>2024-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/kids-soccer-team-celebrating-goal-on-field.jpg</image:loc>
+      <image:title>Championship game winning goal - we did it Tigers!</image:title>
+      <image:caption>Emma's Soccer Season 2024 - Central Park Soccer Fields</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/story/graduation-memories-2024</loc>
+    <lastmod>2024-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://tagmytrophy.com/graduation-ceremony-with-cap-and-gown-celebration.jpg</image:loc>
+      <image:title>Walking across the stage - four years of hard work paying off</image:title>
+      <image:caption>Sarah's Graduation Journey - University Stadium</image:caption>
+    </image:image>
+  </url>
+
+   Public pages 
+  <url>
+    <loc>https://tagmytrophy.com/auth/login</loc>
+    <lastmod>2024-12-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/auth/signup</loc>
+    <lastmod>2024-12-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://tagmytrophy.com/claim</loc>
+    <lastmod>2024-12-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
