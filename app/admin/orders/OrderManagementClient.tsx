@@ -249,6 +249,8 @@ export default function OrderManagementClient() {
   }
 
   const getOrderProgressSteps = (currentStatus: Order["status"]) => {
+    type StepStatus = "completed" | "current" | "pending" | "error"
+
     const allSteps = [
       { id: "new", label: "New Order", icon: Clock },
       { id: "processing", label: "Processing", icon: Package },
@@ -261,10 +263,13 @@ export default function OrderManagementClient() {
     const statusOrder = ["new", "processing", "ready_to_ship", "packaged", "shipped", "completed"]
     const currentIndex = statusOrder.indexOf(currentStatus)
 
-    return allSteps.map((step, index) => ({
-      ...step,
-      status: index < currentIndex ? "completed" : index === currentIndex ? "current" : "pending",
-    }))
+    return allSteps.map((step, index) => {
+      const status: StepStatus = index < currentIndex ? "completed" : index === currentIndex ? "current" : "pending"
+      return {
+        ...step,
+        status,
+      }
+    })
   }
 
   const updateOrderStatus = async (
