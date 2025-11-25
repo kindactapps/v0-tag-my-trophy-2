@@ -1,43 +1,5 @@
 import { EmailService } from "./email-service"
-
-export interface Order {
-  id: string
-  orderNumber: string
-  paymentIntentId: string
-  customer: {
-    name: string
-    email: string
-    phone?: string
-  }
-  plan: string
-  planName: string
-  amount: number
-  tax: number
-  total: number
-  customization?: string
-  shippingAddress: {
-    line1: string
-    city: string
-    state: string
-    postal_code: string
-    country: string
-  }
-  status:
-    | "pending"
-    | "confirmed"
-    | "processing"
-    | "packaged"
-    | "ready_to_ship"
-    | "shipped"
-    | "delivered"
-    | "completed"
-    | "support"
-  qrSlug?: string
-  trackingNumber?: string
-  createdAt: Date
-  updatedAt: Date
-  metadata?: Record<string, any>
-}
+import type { Order } from "@/types/order"
 
 export class OrderService {
   private static instance: OrderService
