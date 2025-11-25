@@ -446,8 +446,8 @@ export default function QRInventoryClient() {
   }
 
   // Get unique values for filter dropdowns
-  const uniqueStores = [...new Set(qrCodes.map((qr) => qr.assigned_store_name).filter(Boolean))]
-  const uniquePackages = [...new Set(qrCodes.map((qr) => qr.package_name))]
+  const uniqueStores = [...new Set(qrCodes.map((qr) => qr.assigned_store_name).filter(Boolean))] as string[]
+  const uniquePackages = [...new Set(qrCodes.map((qr) => qr.package_name).filter(Boolean))] as string[]
 
   const filteredStores = stores.filter(
     (store) =>
