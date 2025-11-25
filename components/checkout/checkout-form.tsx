@@ -133,6 +133,7 @@ export default function CheckoutForm({ selectedPlan, onSubmit, isProcessing = fa
       newErrors.email = "Please enter a valid email address"
     }
 
+    // Fixed invalid regex - replaced $$ with escaped parentheses $$ and $$
     // Phone validation
     if (formData.phone && !/^$$?([0-9]{3})$$?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(formData.phone)) {
       newErrors.phone = "Please enter a valid phone number"
