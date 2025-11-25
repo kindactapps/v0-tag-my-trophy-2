@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { OrderErrorDisplay } from "@/components/ui/order-error-display"
 import { OrderErrorHandler, ErrorLogger } from "@/lib/error-handling"
 import { AlertTriangle, CheckCircle, Package, Truck, RefreshCw } from "lucide-react"
 import type { Order, OrderError } from "@/types/order" // Import Order and OrderError
@@ -205,7 +204,19 @@ export function EnhancedOrderManagement() {
 
       {/* Action Error Display */}
       {actionError && (
-        <OrderErrorDisplay error={actionError} onContactSupport={() => setActionError(null)} className="mb-4" />
+        <div className="rounded-md bg-red-50 border border-red-200 p-4 text-red-800 mb-4">
+          <p className="font-medium">Error</p>
+          <p className="text-sm">{typeof actionError === "string" ? actionError : actionError.userMessage}</p>
+          {actionError.code && <p className="text-xs mt-1 text-red-600">Error code: {actionError.code}</p>}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setActionError(null)}
+            className="mt-2 text-red-800 border-red-300 hover:bg-red-100"
+          >
+            Dismiss
+          </Button>
+        </div>
       )}
 
       {/* Enhanced Order Actions */}
@@ -257,7 +268,11 @@ export function EnhancedOrderManagement() {
               <div className="space-y-2">
                 <h4 className="font-medium text-red-900">Active Issues ({selectedOrder.errors.length})</h4>
                 {selectedOrder.errors.map((error, index) => (
-                  <OrderErrorDisplay key={index} error={error} className="mb-2" />
+                  <div key={index} className="rounded-md bg-red-50 border border-red-200 p-4 text-red-800 mb-2">
+                    <p className="font-medium">Error</p>
+                    <p className="text-sm">{typeof error === "string" ? error : error.userMessage}</p>
+                    {error.code && <p className="text-xs mt-1 text-red-600">Error code: {error.code}</p>}
+                  </div>
                 ))}
                 <Button
                   size="sm"
