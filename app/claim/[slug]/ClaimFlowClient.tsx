@@ -515,7 +515,7 @@ export default function ClaimFlowClient({ slug }: { slug: string }) {
                                   >
                                     <option value="">Select {field.field_label}</option>
                                     {field.field_options?.map((option: string) => (
-                                      <option key={option} value={option}>
+                                      <option key={option ?? ""} value={option ?? ""}>
                                         {option}
                                       </option>
                                     ))}
