@@ -32,7 +32,6 @@ import {
   Download,
   RefreshCw,
   HardDrive,
-  Star,
   MapPin,
   Calendar,
   Target,
@@ -250,9 +249,9 @@ export default function AnalyticsClient() {
           </Card>
 
           <Card className="border-amber-200">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-amber-800">Customer LTV</CardTitle>
-              <Star className="h-4 w-4 text-amber-600" />
+            <CardHeader>
+              <CardTitle className="text-amber-900">Customer LTV</CardTitle>
+              <CardDescription>Lifetime value</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-amber-900">${businessMetrics.customerLifetimeValue}</div>
@@ -516,10 +515,11 @@ export default function AnalyticsClient() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ region, percentage }) => `${region} ${percentage}%`}
+                        label={({ name, value }) => `${name} ${value}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="percentage"
+                        nameKey="region"
                       >
                         {geographicData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={`hsl(${30 + index * 40}, 60%, ${60 - index * 5}%)`} />
