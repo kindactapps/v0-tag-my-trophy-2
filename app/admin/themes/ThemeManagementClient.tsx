@@ -95,11 +95,19 @@ export default function ThemeManagementClient() {
   const [selectedThemeForFields, setSelectedThemeForFields] = useState<Theme | null>(null)
   const [isAddFieldDialogOpen, setIsAddFieldDialogOpen] = useState(false)
   const [editingField, setEditingField] = useState<CustomField | null>(null)
-  const [fieldFormData, setFieldFormData] = useState({
+  const [fieldFormData, setFieldFormData] = useState<{
+    field_name: string
+    field_label: string
+    field_type: "text" | "number" | "date" | "select" | "textarea"
+    field_options: string[]
+    is_required: boolean
+    display_order: number
+    placeholder: string
+  }>({
     field_name: "",
     field_label: "",
-    field_type: "text" as const,
-    field_options: [] as string[],
+    field_type: "text",
+    field_options: [],
     is_required: false,
     display_order: 0,
     placeholder: "",
