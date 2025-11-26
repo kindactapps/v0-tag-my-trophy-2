@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { createClient } from "@/lib/supabase/client"
+import { toast } from "@/hooks/use-toast"
 import {
   ArrowLeft,
   User,
@@ -72,7 +73,6 @@ export default function SettingsClient() {
 
         setSubscription(subscriptionData)
       } catch (error) {
-        console.error("[v0] Error loading user data:", error)
       } finally {
         setLoading(false)
       }
@@ -106,10 +106,16 @@ export default function SettingsClient() {
 
       if (error) throw error
 
-      alert("Profile updated successfully!")
+      toast({
+        title: "Success",
+        description: "Profile updated successfully!",
+      })
     } catch (error) {
-      console.error("[v0] Error saving profile:", error)
-      alert("Failed to save profile. Please try again.")
+      toast({
+        title: "Error",
+        description: "Failed to save profile. Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setSaving(false)
     }
@@ -138,10 +144,16 @@ export default function SettingsClient() {
         .single()
 
       setSubscription(updatedSubscription)
-      alert("Subscription will be canceled at the end of the current billing period.")
+      toast({
+        title: "Subscription Canceled",
+        description: "Subscription will be canceled at the end of the current billing period.",
+      })
     } catch (error) {
-      console.error("[v0] Error canceling subscription:", error)
-      alert("Failed to cancel subscription. Please try again.")
+      toast({
+        title: "Error",
+        description: "Failed to cancel subscription. Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setCancelingSubscription(false)
     }
@@ -164,8 +176,11 @@ export default function SettingsClient() {
       const { url } = await response.json()
       window.location.href = url
     } catch (error) {
-      console.error("[v0] Error opening billing portal:", error)
-      alert("Failed to open billing portal. Please try again.")
+      toast({
+        title: "Error",
+        description: "Failed to open billing portal. Please try again.",
+        variant: "destructive",
+      })
     }
   }
 

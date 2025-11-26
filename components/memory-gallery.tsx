@@ -1,30 +1,16 @@
 "use client"
 
 import { useState } from "react"
-
-interface Memory {
-  id: number
-  type: "photo" | "video" | "story"
-  url?: string
-  title?: string
-  caption?: string
-  content?: string
-  date: string
-  location?: string
-  thumbnail?: string
-}
+import type { Memory } from "@/types"
 
 interface MemoryGalleryProps {
   memories: Memory[]
 }
 
 export default function MemoryGallery({ memories }: MemoryGalleryProps) {
-  console.log("[v0] MemoryGallery rendering with", memories?.length, "memories")
-
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null)
 
   if (!memories || memories.length === 0) {
-    console.log("[v0] No memories to display")
     return (
       <div className="text-center py-12">
         <p className="text-[#2c2c2c]/60">No memories yet</p>
@@ -32,20 +18,16 @@ export default function MemoryGallery({ memories }: MemoryGalleryProps) {
     )
   }
 
-  console.log("[v0] Rendering", memories.length, "memory cards")
-
   return (
     <>
       {/* Masonry Grid Layout */}
       <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
         {memories.map((memory, index) => {
-          console.log("[v0] Rendering memory", index, memory.type, memory.id)
           return (
             <div
               key={memory.id}
               className="break-inside-avoid bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
               onClick={() => {
-                console.log("[v0] Memory clicked:", memory.id)
                 setSelectedMemory(memory)
               }}
             >
@@ -122,7 +104,6 @@ export default function MemoryGallery({ memories }: MemoryGalleryProps) {
         <div
           className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
           onClick={() => {
-            console.log("[v0] Closing lightbox")
             setSelectedMemory(null)
           }}
         >
@@ -178,7 +159,6 @@ export default function MemoryGallery({ memories }: MemoryGalleryProps) {
           </div>
         </div>
       )}
-      {console.log("[v0] MemoryGallery render complete")}
     </>
   )
 }

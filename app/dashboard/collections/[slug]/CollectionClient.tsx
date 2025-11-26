@@ -32,28 +32,7 @@ import {
   Globe,
   Save,
 } from "lucide-react"
-
-interface Memory {
-  id: number
-  type: "photo" | "video" | "story"
-  url?: string
-  title: string
-  caption?: string
-  content?: string
-  date: string
-  location?: string
-}
-
-interface Collection {
-  id: string
-  title: string
-  theme: string
-  description: string
-  slug: string
-  isPrivate: boolean
-  coverImage: string
-  memories: Memory[]
-}
+import type { Collection as CollectionType, PrivacySettings as PrivacySettingsType } from "@/types"
 
 const themeConfig = {
   hunting: {
@@ -93,7 +72,7 @@ const themeConfig = {
   },
 }
 
-export default function CollectionClient({ collection }: { collection: Collection }) {
+export default function CollectionClient({ collection }: { collection: CollectionType }) {
   const [activeTab, setActiveTab] = useState("memories")
   const [isEditing, setIsEditing] = useState(false)
   const [editedCollection, setEditedCollection] = useState(collection)
@@ -112,7 +91,7 @@ export default function CollectionClient({ collection }: { collection: Collectio
     console.log("Deleting memory:", memoryId)
   }
 
-  const handlePrivacySettingsChange = (settings: any) => {
+  const handlePrivacySettingsChange = (settings: PrivacySettingsType) => {
     // In a real app, this would update the database
     console.log("Privacy settings changed:", settings)
   }

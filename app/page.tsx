@@ -11,8 +11,6 @@ const PricingSection = lazy(() => import("@/components/sections/pricing-section"
 const FooterSection = lazy(() => import("@/components/sections/footer-section"))
 
 export default function HomePage() {
-  console.log("[v0] HomePage component rendering")
-
   const storyCards = useMemo(
     () => [
       {
@@ -79,7 +77,8 @@ export default function HomePage() {
     [],
   )
 
-  console.log("[v0] Story cards prepared:", storyCards.length)
+  // Story cards prepared
+  const storyCardsCount = storyCards.length
 
   return (
     <div className="min-h-screen bg-background">

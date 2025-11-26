@@ -17,6 +17,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Store, Plus, Edit, Trash2, MapPin, Phone, Mail, Package, RefreshCw } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import BackButton from "@/components/back-button"
@@ -43,8 +44,9 @@ export default function StoreManagementClient() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingStore, setEditingStore] = useState<StoreData | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [storeToDelete, setStoreToDelete] = useState<string | null>(null)
 
-  // Form state
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -165,13 +167,16 @@ export default function StoreManagementClient() {
     }
   }
 
-  const handleDeleteStore = async (storeId: string) => {
-    if (!confirm("Are you sure you want to delete this store? This action cannot be undone.")) {
-      return
-    }
+  const handleDeleteStore = (storeId: string) => {
+    setStoreToDelete(storeId)
+    setDeleteDialogOpen(true)
+  }
+
+  const confirmDeleteStore = async () => {
+    if (!storeToDelete) return
 
     try {
-      const response = await fetch(`/api/admin/stores/${storeId}`, {
+      const response = await fetch(`/api/admin/stores/${storeToDelete}`, {
         method: "DELETE",
       })
 
@@ -191,12 +196,14 @@ export default function StoreManagementClient() {
         })
       }
     } catch (error) {
-      console.error("Error deleting store:", error)
       toast({
         title: "Error",
         description: "Failed to delete store",
         variant: "destructive",
       })
+    } finally {
+      setDeleteDialogOpen(false)
+      setStoreToDelete(null)
     }
   }
 
@@ -500,6 +507,17 @@ export default function StoreManagementClient() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Confirm Dialog for Delete */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete Store"
+        description="Are you sure you want to delete this store? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteStore}
+      />
     </div>
   )
 }

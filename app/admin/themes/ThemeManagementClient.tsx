@@ -22,6 +22,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { NewAdminGuard } from "@/components/admin/new-admin-guard"
 import { createClient } from "@/lib/supabase/client"
+import { toast } from "@/hooks/use-toast"
 import { Plus, Edit, Copy, Trash2, Eye, EyeOff, RefreshCw, Palette, ArrowLeft, Settings } from "lucide-react"
 import Link from "next/link"
 
@@ -116,13 +117,21 @@ export default function ThemeManagementClient() {
       const { data, error } = await supabase.from("themes").select("*").order("display_order", { ascending: true })
 
       if (error) {
-        console.error("[v0] Error fetching themes:", error)
+        toast({
+          title: "Error",
+          description: "Failed to fetch themes",
+          variant: "destructive",
+        })
         return
       }
 
       setThemes(data || [])
     } catch (error) {
-      console.error("[v0] Error fetching themes:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch themes",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -137,13 +146,16 @@ export default function ThemeManagementClient() {
         .order("display_order", { ascending: true })
 
       if (error) {
-        console.error("[v0] Error fetching custom fields:", error)
         return
       }
 
       setCustomFields(data || [])
     } catch (error) {
-      console.error("[v0] Error fetching custom fields:", error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch custom fields",
+        variant: "destructive",
+      })
     }
   }
 
@@ -184,15 +196,25 @@ export default function ThemeManagementClient() {
       })
 
       if (error) {
-        console.error("[v0] Error duplicating theme:", error)
-        alert("Failed to duplicate theme")
+        toast({
+          title: "Error",
+          description: "Failed to duplicate theme",
+          variant: "destructive",
+        })
         return
       }
 
+      toast({
+        title: "Success",
+        description: "Theme duplicated successfully",
+      })
       await fetchThemes()
     } catch (error) {
-      console.error("[v0] Error duplicating theme:", error)
-      alert("Failed to duplicate theme")
+      toast({
+        title: "Error",
+        description: "Failed to duplicate theme",
+        variant: "destructive",
+      })
     }
   }
 
@@ -208,17 +230,27 @@ export default function ThemeManagementClient() {
       const { error } = await supabase.from("themes").delete().eq("id", deletingTheme.id)
 
       if (error) {
-        console.error("[v0] Error deleting theme:", error)
-        alert("Failed to delete theme")
+        toast({
+          title: "Error",
+          description: "Failed to delete theme",
+          variant: "destructive",
+        })
         return
       }
 
+      toast({
+        title: "Success",
+        description: "Theme deleted successfully",
+      })
       await fetchThemes()
       setIsDeleteDialogOpen(false)
       setDeletingTheme(null)
     } catch (error) {
-      console.error("[v0] Error deleting theme:", error)
-      alert("Failed to delete theme")
+      toast({
+        title: "Error",
+        description: "Failed to delete theme",
+        variant: "destructive",
+      })
     }
   }
 
@@ -227,13 +259,16 @@ export default function ThemeManagementClient() {
       const { error } = await supabase.from("themes").update({ is_active: !theme.is_active }).eq("id", theme.id)
 
       if (error) {
-        console.error("[v0] Error toggling theme active status:", error)
         return
       }
 
       await fetchThemes()
     } catch (error) {
-      console.error("[v0] Error toggling theme active status:", error)
+      toast({
+        title: "Error",
+        description: "Failed to toggle theme active status",
+        variant: "destructive",
+      })
     }
   }
 
@@ -259,10 +294,18 @@ export default function ThemeManagementClient() {
           .eq("id", editingTheme.id)
 
         if (error) {
-          console.error("[v0] Error updating theme:", error)
-          alert("Failed to update theme")
+          toast({
+            title: "Error",
+            description: "Failed to update theme",
+            variant: "destructive",
+          })
           return
         }
+
+        toast({
+          title: "Success",
+          description: "Theme updated successfully",
+        })
       } else {
         // Create new theme
         const { error } = await supabase.from("themes").insert({
@@ -278,10 +321,18 @@ export default function ThemeManagementClient() {
         })
 
         if (error) {
-          console.error("[v0] Error creating theme:", error)
-          alert("Failed to create theme")
+          toast({
+            title: "Error",
+            description: "Failed to create theme",
+            variant: "destructive",
+          })
           return
         }
+
+        toast({
+          title: "Success",
+          description: "Theme created successfully",
+        })
       }
 
       await fetchThemes()
@@ -289,8 +340,11 @@ export default function ThemeManagementClient() {
       setFormData(emptyFormData)
       setEditingTheme(null)
     } catch (error) {
-      console.error("[v0] Error saving theme:", error)
-      alert("Failed to save theme")
+      toast({
+        title: "Error",
+        description: "Failed to save theme",
+        variant: "destructive",
+      })
     }
   }
 
@@ -335,8 +389,11 @@ export default function ThemeManagementClient() {
       const { error } = await supabase.from("theme_custom_fields").delete().eq("id", fieldId)
 
       if (error) {
-        console.error("[v0] Error deleting field:", error)
-        alert("Failed to delete field")
+        toast({
+          title: "Error",
+          description: "Failed to delete field",
+          variant: "destructive",
+        })
         return
       }
 
@@ -344,8 +401,11 @@ export default function ThemeManagementClient() {
         await fetchCustomFields(selectedThemeForFields.id)
       }
     } catch (error) {
-      console.error("[v0] Error deleting field:", error)
-      alert("Failed to delete field")
+      toast({
+        title: "Error",
+        description: "Failed to delete field",
+        variant: "destructive",
+      })
     }
   }
 
@@ -371,8 +431,11 @@ export default function ThemeManagementClient() {
         const { error } = await supabase.from("theme_custom_fields").update(fieldData).eq("id", editingField.id)
 
         if (error) {
-          console.error("[v0] Error updating field:", error)
-          alert("Failed to update field")
+          toast({
+            title: "Error",
+            description: "Failed to update field",
+            variant: "destructive",
+          })
           return
         }
       } else {
@@ -380,8 +443,11 @@ export default function ThemeManagementClient() {
         const { error } = await supabase.from("theme_custom_fields").insert(fieldData)
 
         if (error) {
-          console.error("[v0] Error creating field:", error)
-          alert("Failed to create field")
+          toast({
+            title: "Error",
+            description: "Failed to create field",
+            variant: "destructive",
+          })
           return
         }
       }
@@ -399,8 +465,11 @@ export default function ThemeManagementClient() {
       })
       setEditingField(null)
     } catch (error) {
-      console.error("[v0] Error saving field:", error)
-      alert("Failed to save field")
+      toast({
+        title: "Error",
+        description: "Failed to save field",
+        variant: "destructive",
+      })
     }
   }
 

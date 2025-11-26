@@ -1,14 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { constructWebhookEvent, STRIPE_ANNUAL_HOSTING_PRICE_ID } from "@/lib/stripe"
+import { stripe, constructWebhookEvent, STRIPE_ANNUAL_HOSTING_PRICE_ID } from "@/lib/stripe"
 import { headers } from "next/headers"
 import { OrderService } from "@/lib/order-service"
 import { NotificationService } from "@/lib/notification-service"
 import { createClient } from "@/lib/supabase/server"
-import Stripe from "stripe"
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15",
-})
 
 export async function POST(request: NextRequest) {
   try {

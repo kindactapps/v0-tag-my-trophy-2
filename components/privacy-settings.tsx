@@ -23,6 +23,7 @@ import {
   CheckCircle,
   AlertTriangle,
 } from "lucide-react"
+import type { PrivacySettings as PrivacySettingsType } from "@/types"
 
 interface PrivacySettingsProps {
   collectionId: string
@@ -30,7 +31,7 @@ interface PrivacySettingsProps {
   allowComments: boolean
   allowSharing: boolean
   requirePassword: boolean
-  onSettingsChange: (settings: PrivacySettings) => void
+  onSettingsChange: (settings: PrivacySettingsType) => void
 }
 
 interface PrivacySettings {

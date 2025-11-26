@@ -6,9 +6,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { token } = body
 
-    if (token && adminSessions.has(token)) {
+    // Client should delete the token from localStorage
+    if (token) {
       adminSessions.delete(token)
-      console.log("[v0] Admin session logged out")
+      console.log("[v0] Admin session logged out (client should delete token)")
     }
 
     return NextResponse.json({ success: true })

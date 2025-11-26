@@ -4,14 +4,23 @@ import QRCode from "qrcode"
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createServerClient()
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized", message: "Please log in to continue" }, { status: 401 })
+    }
+
     const body = await request.json()
     const { slugId } = body
 
     if (!slugId) {
       return NextResponse.json({ error: "Slug ID is required" }, { status: 400 })
     }
-
-    const supabase = await createServerClient()
 
     // Get the slug details including owner_id to preserve the link
     const { data: slug, error: fetchError } = await supabase

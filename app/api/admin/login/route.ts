@@ -1,11 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { adminSessions, cleanupExpiredSessions } from "@/lib/admin-sessions"
+import { createAdminToken } from "@/lib/admin-sessions"
 
 export async function POST(request: NextRequest) {
   try {
-    // Clean up expired sessions periodically
-    cleanupExpiredSessions()
-
     const body = await request.json()
     const { email, password } = body
 
@@ -23,14 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (email === adminEmail && password === adminPassword) {
-      // Generate session token using crypto.randomUUID()
-      const token = crypto.randomUUID()
-
-      // Store session in memory Map
-      adminSessions.set(token, {
-        email,
-        timestamp: Date.now(),
-      })
+      const token = createAdminToken(email)
 
       console.log("[v0] Admin login successful for:", email)
       return NextResponse.json({ success: true, token })

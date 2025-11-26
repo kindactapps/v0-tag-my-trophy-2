@@ -8,6 +8,22 @@ export interface Notification {
   read: boolean
 }
 
+type AlertType =
+  | "new_order"
+  | "payment_failed"
+  | "dispute_created"
+  | "support_request"
+  | "subscription_created"
+  | "subscription_updated"
+  | "subscription_canceled"
+  | "subscription_trial_ending"
+  | "invoice_paid"
+  | "invoice_payment_failed"
+  | "customer_created"
+  | "payment_intent_succeeded"
+  | "payment_intent_failed"
+  | "qr_claimed"
+
 export class NotificationService {
   private static instance: NotificationService
 
@@ -43,12 +59,15 @@ export class NotificationService {
         read: false,
       }
 
-      console.log("🔔 Sending notification:", {
-        to: customerEmail,
-        type: notification.type,
-        title: notification.title,
-        orderNumber: data.orderNumber,
-      })
+      // Production logging - only essential info
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔔 Sending notification:", {
+          to: customerEmail,
+          type: notification.type,
+          title: notification.title,
+          orderNumber: data.orderNumber,
+        })
+      }
 
       // In a real implementation:
       // 1. Save notification to database
@@ -65,22 +84,22 @@ export class NotificationService {
 
   private getNotificationTitle(type: Notification["type"]): string {
     const titles = {
-      order_confirmed: "✅ Order Confirmed",
-      qr_generated: "🏷️ QR Code Ready",
-      manufacturing: "🏭 In Production",
-      shipped: "📦 Order Shipped",
-      delivered: "🎉 Order Delivered",
-      support: "🚨 Support Needed",
+      order_confirmed: "Order Confirmed",
+      qr_generated: "QR Code Ready",
+      manufacturing: "In Production",
+      shipped: "Order Shipped",
+      delivered: "Order Delivered",
+      support: "Support Needed",
     }
     return titles[type] || "Order Update"
   }
 
-  async sendAdminAlert(
-    type: "new_order" | "payment_failed" | "dispute_created" | "support_request",
-    data: Record<string, any>,
-  ): Promise<boolean> {
+  async sendAdminAlert(type: AlertType, data: Record<string, any>): Promise<boolean> {
     try {
-      console.log("🚨 Admin alert:", { type, data })
+      // Production logging - only in development
+      if (process.env.NODE_ENV === "development") {
+        console.log("🚨 Admin alert:", { type, data })
+      }
 
       // In a real implementation:
       // 1. Send to admin dashboard

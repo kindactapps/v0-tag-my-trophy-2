@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "Tag My Trophy - Turn Physical Items Into Digital Memory Collections",
   description:
     "Transform your trophies, equipment, and keepsakes into interactive digital experiences with QR code tags.",
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export const viewport: Viewport = {
@@ -41,19 +41,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  console.log("[v0] RootLayout rendering")
-
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}>
       <body className="font-sans antialiased">
         <ScrollToTop />
         <main id="main-content">{children}</main>
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `console.log("[v0] Layout script loaded");`,
-          }}
-        />
       </body>
     </html>
   )

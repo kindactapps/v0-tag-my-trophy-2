@@ -5,10 +5,11 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Eye, EyeOff } from "lucide-react"
+import type { ProfileCustomization } from "@/types"
 
 interface ProfileCustomizerProps {
-  profile: any
-  onProfileUpdate: (updates: any) => void
+  profile: ProfileCustomization
+  onProfileUpdate: (updates: Partial<ProfileCustomization>) => void
   isOpen: boolean
   onClose: () => void
 }

@@ -1,55 +1,100 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Mail, Package, Truck, Home, Calendar, MapPin } from "lucide-react"
-
-// Mock order data - in real implementation, this would come from URL params or API
-const mockOrderData = {
-  orderNumber: "TMT-2024-001",
-  plan: "Premium",
-  amount: 49.99,
-  tax: 4.0,
-  total: 53.99,
-  customer: {
-    name: "John Doe",
-    email: "john@example.com",
-  },
-  shipping: {
-    address: "123 Main Street",
-    city: "San Francisco",
-    state: "CA",
-    zipCode: "94102",
-  },
-  estimatedDelivery: "3-5 business days",
-  qrSlug: "family-vacation-2024",
-}
+import { CheckCircle, Mail, Package, Truck, Home, Calendar, MapPin, Loader2 } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
+import type { Order } from "@/types/order"
 
 export default function CheckoutSuccessPage() {
+  const searchParams = useSearchParams()
+  const orderId = searchParams.get("order_id")
+  const sessionId = searchParams.get("session_id")
+
+  const [order, setOrder] = useState<Order | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [emailSent, setEmailSent] = useState(false)
   const [trialEndDate, setTrialEndDate] = useState<string | null>(null)
 
   useEffect(() => {
-    // Simulate email confirmation
-    const timer = setTimeout(() => {
-      setEmailSent(true)
-    }, 2000)
+    async function fetchOrder() {
+      if (!orderId && !sessionId) {
+        setError("No order information found")
+        setLoading(false)
+        return
+      }
 
-    const oneYearFromNow = new Date()
-    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
-    setTrialEndDate(
-      oneYearFromNow.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }),
+      const supabase = createClient()
+
+      let query = supabase.from("orders").select("*")
+
+      if (orderId) {
+        query = query.eq("id", orderId)
+      } else if (sessionId) {
+        query = query.eq("stripe_payment_intent_id", sessionId)
+      }
+
+      const { data, error: fetchError } = await query.single()
+
+      if (fetchError || !data) {
+        setError("Could not find your order")
+      } else {
+        setOrder(data)
+        // Simulate email sent
+        setTimeout(() => setEmailSent(true), 2000)
+
+        // Calculate trial end date
+        const oneYearFromNow = new Date()
+        oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+        setTrialEndDate(
+          oneYearFromNow.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+        )
+      }
+
+      setLoading(false)
+    }
+
+    fetchOrder()
+  }, [orderId, sessionId])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f5f0e8] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-[#c44c3a] mx-auto mb-4" />
+          <p className="text-[#6b5b47]">Loading your order details...</p>
+        </div>
+      </div>
     )
+  }
 
-    return () => clearTimeout(timer)
-  }, [])
+  if (error || !order) {
+    return (
+      <div className="min-h-screen bg-[#f5f0e8] flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center p-6">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-[#2c2c2c] mb-2">Order Not Found</h1>
+          <p className="text-[#6b5b47] mb-6">{error}</p>
+          <Button asChild className="bg-[#c44c3a] hover:bg-[#a63d2e] text-white">
+            <Link href="/">Return to Home</Link>
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#f5f0e8]">
@@ -101,29 +146,29 @@ export default function CheckoutSuccessPage() {
               <Package className="w-5 h-5 text-[#c44c3a]" />
               Order Details
             </CardTitle>
-            <CardDescription>Order #{mockOrderData.orderNumber}</CardDescription>
+            <CardDescription>Order #{order?.id}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Badge className="bg-purple-500 text-white">{mockOrderData.plan}</Badge>
+                <Badge className="bg-purple-500 text-white">{order?.plan}</Badge>
                 <span className="font-medium text-[#2c2c2c]">QR Tag Experience</span>
               </div>
-              <span className="font-bold text-[#2c2c2c]">${mockOrderData.amount}</span>
+              <span className="font-bold text-[#2c2c2c]">${order?.amount}</span>
             </div>
 
             <div className="bg-[#faf8f4] border border-[#e8ddd0] rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-[#6b5b47] mb-1">Customer:</p>
-                  <p className="font-medium text-[#2c2c2c]">{mockOrderData.customer.name}</p>
-                  <p className="text-[#6b5b47]">{mockOrderData.customer.email}</p>
+                  <p className="font-medium text-[#2c2c2c]">{order?.customer_name}</p>
+                  <p className="text-[#6b5b47]">{order?.customer_email}</p>
                 </div>
                 <div>
                   <p className="text-[#6b5b47] mb-1">Shipping Address:</p>
-                  <p className="font-medium text-[#2c2c2c]">{mockOrderData.shipping.address}</p>
+                  <p className="font-medium text-[#2c2c2c]">{order?.shipping_address}</p>
                   <p className="text-[#6b5b47]">
-                    {mockOrderData.shipping.city}, {mockOrderData.shipping.state} {mockOrderData.shipping.zipCode}
+                    {order?.shipping_city}, {order?.shipping_state} {order?.shipping_zip_code}
                   </p>
                 </div>
               </div>
@@ -131,7 +176,7 @@ export default function CheckoutSuccessPage() {
 
             <div className="flex justify-between items-center pt-4 border-t border-[#e5d5c8]">
               <span className="font-bold text-[#2c2c2c]">Total Paid:</span>
-              <span className="font-bold text-[#2c2c2c] text-xl">${mockOrderData.total}</span>
+              <span className="font-bold text-[#2c2c2c] text-xl">${order?.total}</span>
             </div>
           </CardContent>
         </Card>
@@ -176,7 +221,7 @@ export default function CheckoutSuccessPage() {
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="w-4 h-4 text-[#6b5b47]" />
                 <span className="text-sm font-medium text-[#2c2c2c]">
-                  Estimated Delivery: {mockOrderData.estimatedDelivery}
+                  Estimated Delivery: {order?.estimated_delivery}
                 </span>
               </div>
               <p className="text-sm text-[#6b5b47]">
@@ -203,7 +248,7 @@ export default function CheckoutSuccessPage() {
                 <MapPin className="w-5 h-5 text-green-600" />
                 <div>
                   <p className="font-medium text-green-900">Your QR Experience URL:</p>
-                  <p className="text-sm text-green-700 font-mono">tagmytrophy.com/{mockOrderData.qrSlug}</p>
+                  <p className="text-sm text-green-700 font-mono">tagmytrophy.com/{order?.qr_slug}</p>
                 </div>
               </div>
               <p className="text-sm text-green-700">
@@ -214,7 +259,7 @@ export default function CheckoutSuccessPage() {
 
             <div className="flex gap-3">
               <Button asChild className="bg-green-600 hover:bg-green-700 text-white">
-                <Link href={`/dashboard/collections/${mockOrderData.qrSlug}`}>Start Adding Memories</Link>
+                <Link href={`/dashboard/collections/${order?.qr_slug}`}>Start Adding Memories</Link>
               </Button>
               <Button
                 asChild

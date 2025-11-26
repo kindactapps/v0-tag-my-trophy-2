@@ -6,40 +6,61 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import RichTextEditor from "./rich-text-editor"
 import DragDropUpload from "./drag-drop-upload"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
+import type { Story, Memory } from "@/types"
 
 interface EditModeOverlayProps {
-  story: any
-  onStoryUpdate: (updatedStory: any) => void
+  story: Story
+  onStoryUpdate: (updatedStory: Story) => void
 }
 
 export default function EditModeOverlay({ story, onStoryUpdate }: EditModeOverlayProps) {
   const [editingMemory, setEditingMemory] = useState<number | null>(null)
   const [showAddMemory, setShowAddMemory] = useState(false)
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+  const [memoryToDelete, setMemoryToDelete] = useState<number | null>(null)
 
-  const handleMemoryUpdate = (memoryId: number, updates: any) => {
-    const updatedMemories = story.memories.map((memory: any) =>
+  const handleMemoryUpdate = (memoryId: number, updates: Partial<Memory>) => {
+    const updatedMemories = story.memories.map((memory) =>
       memory.id === memoryId ? { ...memory, ...updates } : memory,
     )
     onStoryUpdate({ ...story, memories: updatedMemories })
     setEditingMemory(null)
   }
 
-  const handleAddMemory = (newMemory: any) => {
-    const newId = Math.max(...story.memories.map((m: any) => m.id)) + 1
+  const handleAddMemory = (newMemory: Omit<Memory, "id">) => {
+    const newId = Math.max(...story.memories.map((m) => (typeof m.id === "number" ? m.id : 0))) + 1
     const updatedMemories = [...story.memories, { ...newMemory, id: newId }]
     onStoryUpdate({ ...story, memories: updatedMemories })
     setShowAddMemory(false)
   }
 
   const handleDeleteMemory = (memoryId: number) => {
-    if (confirm("Are you sure you want to delete this memory?")) {
-      const updatedMemories = story.memories.filter((memory: any) => memory.id !== memoryId)
+    setMemoryToDelete(memoryId)
+    setDeleteConfirmOpen(true)
+  }
+
+  const confirmDeleteMemory = () => {
+    if (memoryToDelete !== null) {
+      const updatedMemories = story.memories.filter((memory) => memory.id !== memoryToDelete)
       onStoryUpdate({ ...story, memories: updatedMemories })
     }
+    setDeleteConfirmOpen(false)
+    setMemoryToDelete(null)
   }
 
   return (
     <div className="min-h-screen">
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Delete Memory"
+        description="Are you sure you want to delete this memory? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={confirmDeleteMemory}
+      />
+
       {/* Profile Edit Section */}
       <div className="bg-gradient-to-b from-[#2c2c2c] to-[#2c2c2c]/90 text-white">
         <div className="container mx-auto px-4 py-12">
@@ -135,7 +156,7 @@ export default function EditModeOverlay({ story, onStoryUpdate }: EditModeOverla
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {story.memories.map((memory: any) => (
+            {story.memories.map((memory) => (
               <div key={memory.id} className="relative group">
                 <Card className="overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow h-full">
                   {memory.type === "photo" ? (
@@ -222,7 +243,7 @@ export default function EditModeOverlay({ story, onStoryUpdate }: EditModeOverla
           {/* Edit Memory Modal */}
           {editingMemory && (
             <EditMemoryModal
-              memory={story.memories.find((m: any) => m.id === editingMemory)}
+              memory={story.memories.find((m) => m.id === editingMemory)}
               onSave={(updates) => handleMemoryUpdate(editingMemory, updates)}
               onCancel={() => setEditingMemory(null)}
             />

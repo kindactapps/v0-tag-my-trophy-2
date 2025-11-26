@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
+import { toast } from "@/hooks/use-toast"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Shield, Eye, Download, Trash2, Lock, Globe, Users, Camera, MapPin, Calendar } from "lucide-react"
 
 interface PrivacySettings {
@@ -33,15 +35,14 @@ export default function PrivacyControls() {
   const [showCookieBanner, setShowCookieBanner] = useState(false)
   const [dataExportLoading, setDataExportLoading] = useState(false)
   const [accountDeletionLoading, setAccountDeletionLoading] = useState(false)
+  const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
 
   useEffect(() => {
-    // Check if user has given cookie consent
     const cookieConsent = localStorage.getItem("cookie_consent")
     if (!cookieConsent) {
       setShowCookieBanner(true)
     }
 
-    // Load saved privacy settings
     const savedSettings = localStorage.getItem("privacy_settings")
     if (savedSettings) {
       setSettings(JSON.parse(savedSettings))
@@ -68,10 +69,8 @@ export default function PrivacyControls() {
   const handleDataExport = async () => {
     setDataExportLoading(true)
 
-    // Simulate data export process
     await new Promise((resolve) => setTimeout(resolve, 3000))
 
-    // In a real app, this would generate and download the user's data
     const dataExport = {
       profile: { name: "User", email: "user@example.com" },
       memories: [],
@@ -93,24 +92,30 @@ export default function PrivacyControls() {
   }
 
   const handleAccountDeletion = async () => {
-    if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      return
-    }
-
     setAccountDeletionLoading(true)
 
-    // Simulate account deletion process
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // In a real app, this would delete the user's account and data
-    alert("Account deletion request submitted. You will receive a confirmation email.")
+    toast({
+      title: "Request Submitted",
+      description: "Account deletion request submitted. You will receive a confirmation email.",
+    })
 
     setAccountDeletionLoading(false)
   }
 
   return (
     <div className="space-y-6">
-      {/* Cookie Consent Banner */}
+      <ConfirmDialog
+        open={deleteAccountDialogOpen}
+        onOpenChange={setDeleteAccountDialogOpen}
+        title="Delete Account"
+        description="Are you sure you want to delete your account? This action cannot be undone."
+        confirmLabel="Delete Account"
+        variant="destructive"
+        onConfirm={handleAccountDeletion}
+      />
+
       {showCookieBanner && (
         <div className="fixed bottom-0 left-0 right-0 bg-[#2c2c2c] text-white p-4 z-50 border-t-4 border-[#c44c3a]">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -141,7 +146,6 @@ export default function PrivacyControls() {
         </div>
       )}
 
-      {/* Privacy Settings */}
       <Card className="border-[#e5d5c8]">
         <CardHeader>
           <CardTitle className="text-[#2c2c2c] flex items-center gap-2">
@@ -153,7 +157,6 @@ export default function PrivacyControls() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Profile Visibility */}
           <div className="space-y-3">
             <h4 className="font-medium text-[#2c2c2c] flex items-center gap-2">
               <Eye className="w-4 h-4" />
@@ -180,7 +183,6 @@ export default function PrivacyControls() {
             </div>
           </div>
 
-          {/* Content Settings */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h4 className="font-medium text-[#2c2c2c]">Content Permissions</h4>
@@ -272,7 +274,6 @@ export default function PrivacyControls() {
         </CardContent>
       </Card>
 
-      {/* Data Management */}
       <Card className="border-[#e5d5c8]">
         <CardHeader>
           <CardTitle className="text-[#2c2c2c] flex items-center gap-2">
@@ -306,7 +307,7 @@ export default function PrivacyControls() {
                 Permanently delete your account and all associated data. This cannot be undone.
               </p>
               <Button
-                onClick={handleAccountDeletion}
+                onClick={() => setDeleteAccountDialogOpen(true)}
                 disabled={accountDeletionLoading}
                 variant="destructive"
                 className="w-full"

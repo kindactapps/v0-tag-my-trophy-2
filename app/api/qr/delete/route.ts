@@ -3,6 +3,17 @@ import { createServerClient } from "@/lib/supabase/server"
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createServerClient()
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized", message: "Please log in to continue" }, { status: 401 })
+    }
+
     const body = await request.json()
     const { slugId } = body
 
@@ -11,8 +22,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("[v0] Deleting QR code/slug:", slugId)
-
-    const supabase = await createServerClient()
 
     // Check if slug exists and get its details
     const { data: slug, error: fetchError } = await supabase

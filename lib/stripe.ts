@@ -1,17 +1,22 @@
 import Stripe from "stripe"
 
+// SINGLE SOURCE OF TRUTH for Stripe API version
+// All files must import and use this constant to ensure consistency
+export const STRIPE_API_VERSION = "2024-06-20" as const
+
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not set in environment variables")
+  console.warn("[Stripe] STRIPE_SECRET_KEY not found - Stripe functionality will be limited")
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: STRIPE_API_VERSION,
   typescript: true,
 })
 
 export const STRIPE_CONFIG = {
-  publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+  publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "",
+  apiVersion: STRIPE_API_VERSION,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
   currency: "usd",
   paymentMethods: ["card", "apple_pay", "google_pay"],
 } as const

@@ -4,6 +4,17 @@ import QRCode from "qrcode"
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createServerClient()
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized", message: "Please log in to continue" }, { status: 401 })
+    }
+
     const body = await request.json()
     const { slugs } = body
 
@@ -12,8 +23,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("[v0] Generating QR codes for", slugs.length, "slugs")
-
-    const supabase = await createServerClient()
 
     // Generate QR codes for each slug
     const qrCodes = await Promise.all(

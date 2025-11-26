@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://tagmytrophy.com"
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

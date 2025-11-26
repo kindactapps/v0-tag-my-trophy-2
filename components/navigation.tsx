@@ -165,8 +165,6 @@ export default function Navigation({
   const isLoggedIn = isLoggedInProp ?? isAdminAuthenticated
   const isAdmin = isAdminProp ?? isAdminAuthenticated
 
-  console.log("[v0] Navigation - isAdmin:", isAdmin, "isLoggedIn:", isLoggedIn)
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && mobileMenuOpen) {
@@ -247,8 +245,6 @@ export default function Navigation({
                 height={56}
                 className="w-12 h-12 md:w-14 md:h-14 object-contain"
                 priority
-                onLoad={() => console.log("[v0] Logo loaded successfully")}
-                onError={(e) => console.log("[v0] Logo failed to load:", e)}
               />
               <span className="text-2xl font-bold text-foreground tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Tag My Trophy
